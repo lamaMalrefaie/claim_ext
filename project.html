@@ -1,7 +1,8 @@
+
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Json Extractor</title>
+    <title> Json Extractor </title>
     <style>
         body {
             background-image: url('back.png');
@@ -119,7 +120,6 @@
         </div>
         <div class="clear-box" onclick="clearContent()">Clear</div>
     </div>
-
     <script>
         function processJson() {
             var inputText = document.getElementById('inputBox').value;
@@ -127,17 +127,17 @@
                 var jsonObj = JSON.parse(inputText);
                 var prettyJson = JSON.stringify(jsonObj, null, 2);
                 document.getElementById('beutiBox').value = prettyJson;
+
                 if (jsonObj.fullUrl && jsonObj.fullUrl.includes("https://Bupa.com.sa/MessageHeader")) {
                     var match = jsonObj.fullUrl.match(/https:\/\/(\w+)\.com\.sa\/MessageHeader/);
                     if (match && match[1] != "Bupa") {
                         alert("Wrong response to Bupa company");
                     }
                 }
-
-                processProductOrService(prettyJson, '');
             } catch (e) {
                 document.getElementById('beutiBox').value = 'Invalid JSON: ' + e.message;
                 document.getElementById('outputBox').innerText = '';
+                return;
             }
             searchJson(prettyJson);
         }
@@ -148,12 +148,10 @@
             document.getElementById('outputBox').innerText = '';
         }
 
-        // Define patterns for Nphies, Service, and Serviced Date
-        var NphiesPattern = '"coding":\\s*\\[\\s*{[\\s\\S]+?"system":\\s*"([^"]+)",\\s*"code":\\s*"([^"]+)"';
-        var ServicePattern = '"coding":\\s*\\[\\s*{[\\s\\S]+?},\\s*{[\\s\\S]+?"system":\\s*"([^"]+)",\\s*"code":\\s*"([^"]+)"';
-        var ServicedDatePattern = '"servicedDate":\\s*"([^"]+)"'; // First pattern for servicedDate
-
-        var searchPatterns = {
+        function searchJson(prettyJsonText) {
+            try {
+                var jsonObj = JSON.parse(prettyJsonText);
+                var searchPatterns = {
                     'resourceType': '"eventCoding":\\s*{\\s*"system":\\s*"[^"]*",\\s*"code":\\s*"([^"]+)"',
                     'Bundle ID': '"Bundle"[\\s\\S]*?"id":\\s*"([^"]+)"',
                     'Claim Type': '/CodeSystem/claim-type"[\\s\\S]*?"code":\\s*"([^"]+)"',
@@ -162,15 +160,8 @@
                     'National or Iqama ID': '(?:nphies\\.sa/identifier/nationalid|sa/identifier/iqama)"[\\s\\S]*?"value":\\s*"([\\d]+)"',
                     'Organization ID': '.sa/license/provider-license"[\\s\\S]*?"value":\\s*"([^"]+)"',
                     'Gender': '"gender":\\s*"([^"]+)"',
-                    'Extension Episode': '"url":\\s*"http://nphies.sa/fhir/ksa/nphies-fs/StructureDefinition/extension-episode"[\\s\\S]*?"value":\\s*"([^"]+)"'
+                     'Extension Episode': '"url":\\s*"http://nphies.sa/fhir/ksa/nphies-fs/StructureDefinition/extension-episode"[\\s\\S]*?"value":\\s*"([^"]+)"'
                 };
-        function searchJson(prettyJsonText) {
-            try {
-
-                console.log('Pretty JSON:', prettyJsonText);
-                var jsonObj = JSON.parse(prettyJsonText);
-
-                console.log('Search Patterns:', searchPatterns);
 
                 var results = '';
                 var errorMessages = [];
@@ -205,7 +196,6 @@
                 processProductOrService(prettyJsonText, results);
             } catch (e) {
                 document.getElementById('outputBox').innerText = 'Error parsing JSON: ' + e.message;
-                console.error('JSON parsing error:', e);
             }
 
             try {
@@ -274,12 +264,12 @@
                 document.getElementById('outputBox').innerText = 'Error parsing JSON: ' + e.message;
             }
 
-            processProductOrService(prettyJsonText,'');
+            processProductOrService(prettyJsonText, results);
         }
 
-        // Function to process product or service and extract required fields
         function processProductOrService(prettyJsonText, previousResults) {
             var servicePattern = '"productOrService":\\s*{[\\s\\S]+?},[\\s\\S]*?"quantity":\\s*{\\s*"value":\\s*(\\d+)';
+
             var serviceResults = '';
             var serviceMatches = prettyJsonText.match(new RegExp(servicePattern, 'gi'));
 
@@ -287,26 +277,18 @@
                 for (var i = 0; i < serviceMatches.length; i++) {
                     var currentMatch = serviceMatches[i];
                     var displayPattern = '"display":\\s*"([^"]+)"';
+                    var NphiesPattern = '"coding":\\s*\\[\\s*{[\\s\\S]+?"system":\\s*"([^"]+)",\\s*"code":\\s*"([^"]+)"';
+                    var ServicePattern = '"coding":\\s*\\[\\s*{[\\s\\S]+?},\\s*{[\\s\\S]+?"system":\\s*"([^"]+)",\\s*"code":\\s*"([^"]+)"';
+                    var displayMatch = currentMatch.match(new RegExp(displayPattern, 'i'));
                     var NphiesMatch = currentMatch.match(new RegExp(NphiesPattern, 'i'));
                     var ServiceMatch = currentMatch.match(new RegExp(ServicePattern, 'i'));
-
-                    var displayMatch = currentMatch.match(new RegExp(displayPattern, 'i'));
-                    var ServicedDateMatch1 = currentMatch.match(new RegExp(ServicedDatePattern, 'i'));
-
                     var quantityMatch = currentMatch.match(new RegExp('"quantity":\\s*{\\s*"value":\\s*(\\d+)', 'i'));
 
                     serviceResults += 'Product/Service ' + (i + 1) + ': <br>';
-                    serviceResults += 'Name: ' + (displayMatch ? copyButton(displayMatch[1]) : 'Not found') + '<br>';
+                    serviceResults += 'Name: ' + (displayMatch ? displayMatch[1] : 'Not found') + '<br>';
                     serviceResults += 'Nphies Code: ' + (NphiesMatch ? copyButton(NphiesMatch[2]) : 'Not found') + '<br>';
                     serviceResults += 'Service Code: ' + (ServiceMatch ? copyButton(ServiceMatch[2]) : 'Not found') + '<br>';
-
-                    if (ServicedDateMatch1) {
-                        serviceResults += 'Serviced Date: ' + copyButton(ServicedDateMatch1[1]) + '<br>';
-                    } else {
-                        serviceResults += 'Serviced Date: Not found<br>';
-                    }
-
-                    serviceResults += 'Quantity: ' + (quantityMatch ? copyButton(quantityMatch[1]) : 'Not found') + '<br><br>';
+                    serviceResults += 'Quantity: ' + (quantityMatch ? quantityMatch[1] : 'Not found') + '<br><br>';
                 }
             }
 
