@@ -162,8 +162,13 @@
                     'Member ID': '/memberid"[\\s\\S]*?"value":\\s*"([^"]+)"',
                     'National or Iqama ID': '(?:nphies\\.sa/identifier/nationalid|sa/identifier/iqama)"[\\s\\S]*?"value":\\s*"([\\d]+)"',
                     'Organization ID': '.sa/license/provider-license"[\\s\\S]*?"value":\\s*"([^"]+)"',
+                    'preAuthRef': '"preAuthRef":\\s*\\[\\s*"([^"]+)"\\s*\\]',
                     'Gender': '"gender":\\s*"([^"]+)"',
-                     'Extension Episode': '"url":\\s*"http://nphies.sa/fhir/ksa/nphies-fs/StructureDefinition/extension-episode"[\\s\\S]*?"value":\\s*"([^"]+)"'
+                    'Extension Episode': '"url":\\s*"http://nphies.sa/fhir/ksa/nphies-fs/StructureDefinition/extension-episode"[\\s\\S]*?"value":\\s*"([^"]+)"',
+                    'Practitioner License': '"system":\\s*"http://nphies.sa/license/practitioner-license",\\s*"value":\\s*"([^"]+)"',
+                    'Accounting Period Value Date': '"url":\\s*"http://nphies.sa/fhir/ksa/nphiesfs/StructureDefinition/extension-accountingPeriod"[\\s\\S]*?"valueDate":\\s*"([^"]+)"',
+                    'Specialty Code': '"specialty":\\s*\\[[\\s\\S]*?"code":\\s*"([^"]+)"',
+                    'Timestamp': '"timestamp":\\s*"([^"]+)"'
                 };
 
                 var results = '';
