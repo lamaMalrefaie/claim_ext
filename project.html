@@ -155,6 +155,8 @@
 
         function searchJson(prettyJsonText) {
             try {
+
+                console.log('Pretty JSON:', prettyJsonText);
                 var jsonObj = JSON.parse(prettyJsonText);
                 var searchPatterns = {
                     'resourceType': '"eventCoding":\\s*{\\s*"system":\\s*"[^"]*",\\s*"code":\\s*"([^"]+)"',
@@ -167,6 +169,8 @@
                     'Gender': '"gender":\\s*"([^"]+)"',
                     'Extension Episode': '"url":\\s*"http://nphies.sa/fhir/ksa/nphies-fs/StructureDefinition/extension-episode"[\\s\\S]*?"value":\\s*"([^"]+)"'
                 };
+
+                console.log('Search Patterns:', searchPatterns);
 
                 var results = '';
                 var errorMessages = [];
@@ -201,6 +205,7 @@
                 processProductOrService(prettyJsonText, results);
             } catch (e) {
                 document.getElementById('outputBox').innerText = 'Error parsing JSON: ' + e.message;
+                console.error('JSON parsing error:', e);
             }
 
             try {
