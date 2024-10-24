@@ -148,6 +148,9 @@
             document.getElementById('outputBox').innerText = '';
         }
 
+
+        var ServicedDatePattern = '"servicedDate":\\s*"([^"]+)"'; // First pattern for servicedDate
+
         function searchJson(prettyJsonText) {
             try {
                 var jsonObj = JSON.parse(prettyJsonText);
@@ -283,11 +286,20 @@
                     var NphiesMatch = currentMatch.match(new RegExp(NphiesPattern, 'i'));
                     var ServiceMatch = currentMatch.match(new RegExp(ServicePattern, 'i'));
                     var quantityMatch = currentMatch.match(new RegExp('"quantity":\\s*{\\s*"value":\\s*(\\d+)', 'i'));
+                    var ServicedDateMatch1 = currentMatch.match(new RegExp(ServicedDatePattern, 'i'));
 
                     serviceResults += 'Product/Service ' + (i + 1) + ': <br>';
                     serviceResults += 'Name: ' + (displayMatch ? displayMatch[1] : 'Not found') + '<br>';
                     serviceResults += 'Nphies Code: ' + (NphiesMatch ? copyButton(NphiesMatch[2]) : 'Not found') + '<br>';
                     serviceResults += 'Service Code: ' + (ServiceMatch ? copyButton(ServiceMatch[2]) : 'Not found') + '<br>';
+                    
+                    if (ServicedDateMatch1) {
+                        serviceResults += 'Serviced Date: ' + copyButton(ServicedDateMatch1[1]) + '<br>';
+                    } else {
+                        serviceResults += 'Serviced Date: Not found<br>';
+                    }
+
+
                     serviceResults += 'Quantity: ' + (quantityMatch ? quantityMatch[1] : 'Not found') + '<br><br>';
                 }
             }
