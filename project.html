@@ -174,7 +174,8 @@
                     'PPatient Name': '"system":\\s*"http://sghj.com/identifier/mrn",\\s*"value":\\s*"([^"]+)"',  // Extract MRN identifier
                     'Patient Name': '"name":\\s*\\[[\\s\\S]*?"text":\\s*"([^"]+)"',
                     'ICD-10 Code (R10.1)': '"system":\\s*"http://hl7.org/fhir/sid/icd-10-am",\\s*"code":\\s*"R10\\.1"',
-                    'Diagnosis Type (Principal)': '"system":\\s*"http://nphies.sa/terminology/CodeSystem/diagnosis-type",\\s*"code":\\s*"principal"'
+                    'Diagnosis Type (Principal)': '"system":\\s*"http://nphies.sa/terminology/CodeSystem/diagnosis-type",\\s*"code":\\s*"principal"',
+                    'Practitioner Name': '"name":\\s*\\[\\s*{\\s*"text":\\s*"([^"]+)"'
                 };
 
                 var results = '';
