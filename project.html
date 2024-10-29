@@ -290,7 +290,7 @@
             var serviceResults = '';
             var serviceMatches = prettyJsonText.match(new RegExp(servicePattern, 'gi'));
 
-            var patientInvoicePattern = '"system":\\s*"http://sghj.com/patientInvoice"[\\s\\S]*?"value":\\s*"([^"]+)"';
+            var patientInvoicePattern ='"system":\\s*"[^"]*patientInvoice"\\s*,\\s*"value":\\s*"([^"]+)"';
             var patientInvoiceMatch = prettyJsonText.match(new RegExp(patientInvoicePattern, 'i'));
             var patientInvoiceValue = patientInvoiceMatch ? patientInvoiceMatch[1] : 'Not found';
 
@@ -300,11 +300,12 @@
                     var displayPattern = '"display":\\s*"([^"]+)"';
                     var NphiesPattern = '"coding":\\s*\\[\\s*{[\\s\\S]+?"system":\\s*"([^"]+)",\\s*"code":\\s*"([^"]+)"';
                     var ServicePattern = '"coding":\\s*\\[\\s*{[\\s\\S]+?},\\s*{[\\s\\S]+?"system":\\s*"([^"]+)",\\s*"code":\\s*"([^"]+)"';
-                    var extensionTaxPattern = '"url":\\s*"http://nphies.sa/fhir/ksa/nphies-fs/StructureDefinition/extension-tax"[\\s\\S]*?"valueMoney":\\s*{[\\s\\S]*?"value":\\s*([\\d.]+)';
-                    var displayMatch = currentMatch.match(new RegExp(displayPattern, 'i'));
+                    var extensionTaxPattern = '"url":\\s*"[^"]*extension-tax"\\s*,\\s*"valueMoney":\\s*{[\\s\\S]*?"value":\\s*([\\d.]+)';
+
+
                     var NphiesMatch = currentMatch.match(new RegExp(NphiesPattern, 'i'));
                     var ServiceMatch = currentMatch.match(new RegExp(ServicePattern, 'i'));
-                    var extensionTaxMatch = currentMatch.match(new RegExp(extensionTaxPattern, 'i'));
+                    var extensionTaxMatches = currentMatch.match(new RegExp(extensionTaxPattern, 'gi')); // All occurrences of extension-tax in this service
                     var quantityMatch = currentMatch.match(new RegExp('"quantity":\\s*{\\s*"value":\\s*(\\d+)', 'i'));
                     var ServicedDateMatch1 = currentMatch.match(new RegExp(ServicedDatePattern, 'i'));
 
@@ -314,6 +315,19 @@
                     serviceResults += 'Service Code: ' + (ServiceMatch ? copyButton(ServiceMatch[2]) : 'Not found') + '<br>';
                     serviceResults += 'Patient Invoice: ' + (patientInvoiceValue !== 'Not found' ? copyButton(patientInvoiceValue) : 'Not found') + '<br>';
                     serviceResults += 'Extension Tax: ' + (extensionTaxMatch ? copyButton(extensionTaxMatch[1]) : 'Not found') + '<br>';
+
+
+
+
+                    // Display each extension tax value found in this service entry
+                    if (extensionTaxMatches) {
+                        extensionTaxMatches.forEach((tax, index) => {
+                            var taxValue = tax.match(/"value":\s*([\\d.]+)/);
+                            serviceResults += 'Extension Tax ' + (index + 1) + ': ' + (taxValue ? copyButton(taxValue[1]) : 'Not found') + '<br>';
+                        });
+                    } else {
+                        serviceResults += 'Extension Tax: Not found<br>';
+                    }
 
                     if (ServicedDateMatch1) {
                         serviceResults += 'Serviced Date: ' + copyButton(ServicedDateMatch1[1]) + '<br>';
