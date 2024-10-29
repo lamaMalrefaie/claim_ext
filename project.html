@@ -303,6 +303,8 @@
                     var extensionTaxPattern = '"url":\\s*"[^"]*extension-tax"\\s*,\\s*"valueMoney":\\s*{[\\s\\S]*?"value":\\s*([\\d.]+)';
 
 
+
+                    var displayMatch = currentMatch.match(new RegExp(displayPattern, 'i'));
                     var NphiesMatch = currentMatch.match(new RegExp(NphiesPattern, 'i'));
                     var ServiceMatch = currentMatch.match(new RegExp(ServicePattern, 'i'));
                     var extensionTaxMatches = currentMatch.match(new RegExp(extensionTaxPattern, 'gi')); // All occurrences of extension-tax in this service
