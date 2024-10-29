@@ -284,10 +284,17 @@
         function processProductOrService(prettyJsonText, previousResults) {
             var servicePattern = '"productOrService":\\s*{[\\s\\S]+?},[\\s\\S]*?"quantity":\\s*{\\s*"value":\\s*(\\d+)';
             var patientInvoicePattern = '"system":\\s*"http://sghj.com/patientInvoice"[\\s\\S]*?"value":\\s*"([^"]+)"';
+            var extensionTaxPattern = '"url":\\s*"http://nphies.sa/fhir/ksa/nphies-fs/StructureDefinition/extension-tax"[\\s\\S]*?"valueMoney":\\s*{[\\s\\S]*?"value":\\s*([\\d.]+)';
+
+
+
+
             var serviceResults = '';
             var serviceMatches = prettyJsonText.match(new RegExp(servicePattern, 'gi'));
             var patientInvoiceMatch = prettyJsonText.match(new RegExp(patientInvoicePattern, 'i'));
             var patientInvoiceValue = patientInvoiceMatch ? patientInvoiceMatch[1] : 'Not found';
+            var extensionTaxMatch = prettyJsonText.match(new RegExp(extensionTaxPattern, 'i'));
+            var extensionTaxValue = extensionTaxMatch ? extensionTaxMatch[1] : 'Not found';
 
             if (serviceMatches) {
                 for (var i = 0; i < serviceMatches.length; i++) {
@@ -306,6 +313,8 @@
                     serviceResults += 'Nphies Code: ' + (NphiesMatch ? copyButton(NphiesMatch[2]) : 'Not found') + '<br>';
                     serviceResults += 'Service Code: ' + (ServiceMatch ? copyButton(ServiceMatch[2]) : 'Not found') + '<br>';
                     serviceResults += 'Patient Invoice: ' + (patientInvoiceValue !== 'Not found' ? copyButton(patientInvoiceValue) : 'Not found') + '<br>';
+                    serviceResults += 'Extension Tax: ' + (extensionTaxValue !== 'Not found' ? copyButton(extensionTaxValue) : 'Not found') + '<br>';
+
                     
                     if (ServicedDateMatch1) {
                         serviceResults += 'Serviced Date: ' + copyButton(ServicedDateMatch1[1]) + '<br>';
