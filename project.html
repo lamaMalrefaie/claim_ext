@@ -290,6 +290,9 @@
             var serviceResults = '';
             var serviceMatches = prettyJsonText.match(new RegExp(servicePattern, 'gi'));
 
+            var patientInvoicePattern = '"system":\\s*"http://sghj.com/patientInvoice"[\\s\\S]*?"value":\\s*"([^"]+)"';
+            var patientInvoiceMatch = prettyJsonText.match(new RegExp(patientInvoicePattern, 'i'));
+            var patientInvoiceValue = patientInvoiceMatch ? patientInvoiceMatch[1] : 'Not found';
 
             if (serviceMatches) {
                 for (var i = 0; i < serviceMatches.length; i++) {
@@ -297,12 +300,10 @@
                     var displayPattern = '"display":\\s*"([^"]+)"';
                     var NphiesPattern = '"coding":\\s*\\[\\s*{[\\s\\S]+?"system":\\s*"([^"]+)",\\s*"code":\\s*"([^"]+)"';
                     var ServicePattern = '"coding":\\s*\\[\\s*{[\\s\\S]+?},\\s*{[\\s\\S]+?"system":\\s*"([^"]+)",\\s*"code":\\s*"([^"]+)"';
-                    var patientInvoicePattern = '"system":\\s*"http://sghj.com/patientInvoice"[\\s\\S]*?"value":\\s*"([^"]+)"';
                     var extensionTaxPattern = '"url":\\s*"http://nphies.sa/fhir/ksa/nphies-fs/StructureDefinition/extension-tax"[\\s\\S]*?"valueMoney":\\s*{[\\s\\S]*?"value":\\s*([\\d.]+)';
                     var displayMatch = currentMatch.match(new RegExp(displayPattern, 'i'));
                     var NphiesMatch = currentMatch.match(new RegExp(NphiesPattern, 'i'));
                     var ServiceMatch = currentMatch.match(new RegExp(ServicePattern, 'i'));
-                    var patientInvoiceMatch = currentMatch.match(new RegExp(patientInvoicePattern, 'i'));
                     var extensionTaxMatch = currentMatch.match(new RegExp(extensionTaxPattern, 'i'));
                     var quantityMatch = currentMatch.match(new RegExp('"quantity":\\s*{\\s*"value":\\s*(\\d+)', 'i'));
                     var ServicedDateMatch1 = currentMatch.match(new RegExp(ServicedDatePattern, 'i'));
@@ -311,7 +312,7 @@
                     serviceResults += 'Name: ' + (displayMatch ? displayMatch[1] : 'Not found') + '<br>';
                     serviceResults += 'Nphies Code: ' + (NphiesMatch ? copyButton(NphiesMatch[2]) : 'Not found') + '<br>';
                     serviceResults += 'Service Code: ' + (ServiceMatch ? copyButton(ServiceMatch[2]) : 'Not found') + '<br>';
-                    serviceResults += 'PPatient Invoice: ' + (patientInvoiceMatch ? copyButton(patientInvoiceMatch[2]) : 'Not found') + '<br>';
+                    serviceResults += 'Patient Invoice: ' + (patientInvoiceValue !== 'Not found' ? copyButton(patientInvoiceValue) : 'Not found') + '<br>';
                     serviceResults += 'Extension Tax: ' + (extensionTaxMatch ? copyButton(extensionTaxMatch[1]) : 'Not found') + '<br>';
 
                     if (ServicedDateMatch1) {
