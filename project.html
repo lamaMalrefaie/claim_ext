@@ -169,10 +169,12 @@
                     'Accounting Period Value Date': '"url":\\s*"http://nphies.sa/fhir/ksa/nphiesfs/StructureDefinition/extension-accountingPeriod"[\\s\\S]*?"valueDate":\\s*"([^"]+)"',
                     'Specialty Code': '"specialty":\\s*\\[[\\s\\S]*?"code":\\s*"([^"]+)"',
                     'Timestamp': '"timestamp":\\s*"([^"]+)"',
-                    'Practitioner Name': '"name":\\s*\\[[\\s\\S]*?"text":\\s*"([^"]+)"',  // Extract practitioner name
-                    'Claim ID': '"system":\\s*"http://sghj.com/claim",\\s*"value":\\s*"([^"]+)"',  // Extract claim identifier
+                    'Practitioner Name': '"name":\\s*\\[[\\s\\S]*?"text":\\s*"([^"]+)"',  // not correct
+                    'Claim ID': '"system":\\s*"http://sghj.com/claim",\\s*"value":\\s*"([^"]+)"',  // Extract claim identifier \\ claimm id 
                     'PPatient Name': '"system":\\s*"http://sghj.com/identifier/mrn",\\s*"value":\\s*"([^"]+)"',  // Extract MRN identifier
-                    'Patient Name': '"name":\\s*\\[[\\s\\S]*?"text":\\s*"([^"]+)"' 
+                    'Patient Name': '"name":\\s*\\[[\\s\\S]*?"text":\\s*"([^"]+)"',
+                    'ICD-10 Code': '"system":\\s*"http://hl7.org/fhir/sid/icd-10-am",\\s*"code":\\s*"([^"]+)"',
+                    'Diagnosis Type': '"system":\\s*"http://nphies.sa/terminology/CodeSystem/diagnosis-type",\\s*"code":\\s*"([^"]+)"' // correct 
                 };
 
                 var results = '';
