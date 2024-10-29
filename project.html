@@ -307,6 +307,8 @@
                     var displayMatch = currentMatch.match(new RegExp(displayPattern, 'i'));
                     var NphiesMatch = currentMatch.match(new RegExp(NphiesPattern, 'i'));
                     var ServiceMatch = currentMatch.match(new RegExp(ServicePattern, 'i'));
+
+
                     var extensionTaxMatches = currentMatch.match(new RegExp(extensionTaxPattern, 'gi')); // All occurrences of extension-tax in this service
                     var quantityMatch = currentMatch.match(new RegExp('"quantity":\\s*{\\s*"value":\\s*(\\d+)', 'i'));
                     var ServicedDateMatch1 = currentMatch.match(new RegExp(ServicedDatePattern, 'i'));
@@ -323,8 +325,7 @@
                     // Display each extension tax value found in this service entry
                     if (extensionTaxMatches) {
                         extensionTaxMatches.forEach((tax, index) => {
-                            var taxValue = tax.match(/"value":\s*([\\d.]+)/);
-                            serviceResults += 'Extension Tax ' + (index + 1) + ': ' + (taxValue ? copyButton(taxValue[1]) : 'Not found') + '<br>';
+                            serviceResults += 'Extension Tax ' + (index + 1) + ': ' + copyButton(tax.match(/[\\d.]+/)[0]) + '<br>';
                         });
                     } else {
                         serviceResults += 'Extension Tax: Not found<br>';
