@@ -300,7 +300,7 @@
                     var displayPattern = '"display":\\s*"([^"]+)"';
                     var NphiesPattern = '"coding":\\s*\\[\\s*{[\\s\\S]+?"system":\\s*"([^"]+)",\\s*"code":\\s*"([^"]+)"';
                     var ServicePattern = '"coding":\\s*\\[\\s*{[\\s\\S]+?},\\s*{[\\s\\S]+?"system":\\s*"([^"]+)",\\s*"code":\\s*"([^"]+)"';
-                    var extensionTaxPattern = '"url":\\s*"[^"]*extension-tax"[\\s\\S]*?"valueMoney":\\s*{[\\s\\S]*?"value":\\s*([\\d.]+)';
+                    var extensionTaxPattern = '"url":\\s*"[^"]*extension-tax"[\\s\\S]*?"valueMoney":\\s*{\\s*"value":\\s*([\\d.]+)';
 
 
 
@@ -309,7 +309,8 @@
                     var ServiceMatch = currentMatch.match(new RegExp(ServicePattern, 'i'));
 
 
-                    var extensionTaxMatches = currentMatch.match(new RegExp(extensionTaxPattern, 'gi')); // All occurrences of extension-tax in this service
+                    var extensionTaxMatches = prettyJsonText.match(new RegExp(extensionTaxPattern, 'gi'));
+
                     var quantityMatch = currentMatch.match(new RegExp('"quantity":\\s*{\\s*"value":\\s*(\\d+)', 'i'));
                     var ServicedDateMatch1 = currentMatch.match(new RegExp(ServicedDatePattern, 'i'));
 
@@ -322,11 +323,11 @@
 
 
 
-                    // Display each extension tax value found in this service entry
                     if (extensionTaxMatches) {
-                        extensionTaxMatches.forEach((tax, index) => {
-                            serviceResults += 'Extension Tax ' + (index + 1) + ': ' + copyButton(tax.match(/[\\d.]+/)[0]) + '<br>';
-                        });
+                        
+                        extensionTaxMatches.forEach((taxValue, index) => {
+                        serviceResults += 'Extension Tax ' + (index + 1) + ': ' + copyButton(taxValue.match(/[\\d.]+/)[0]) + '<br>';
+                    });
                     } else {
                         serviceResults += 'Extension Tax: Not found<br>';
                     }
