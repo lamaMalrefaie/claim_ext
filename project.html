@@ -302,14 +302,11 @@
                     var ServicePattern = '"coding":\\s*\\[\\s*{[\\s\\S]+?},\\s*{[\\s\\S]+?"system":\\s*"([^"]+)",\\s*"code":\\s*"([^"]+)"';
                     var extensionTaxPattern = '"url":\\s*"[^"]*extension-tax"[\\s\\S]*?"valueMoney":\\s*{\\s*"value":\\s*([\\d.]+)';
 
-
-
                     var displayMatch = currentMatch.match(new RegExp(displayPattern, 'i'));
                     var NphiesMatch = currentMatch.match(new RegExp(NphiesPattern, 'i'));
                     var ServiceMatch = currentMatch.match(new RegExp(ServicePattern, 'i'));
 
-
-                    var extensionTaxMatches = prettyJsonText.match(new RegExp(extensionTaxPattern, 'gi'));
+                    var extensionTaxMatch = currentMatch.match(new RegExp(extensionTaxPattern, 'i'));
 
                     var quantityMatch = currentMatch.match(new RegExp('"quantity":\\s*{\\s*"value":\\s*(\\d+)', 'i'));
                     var ServicedDateMatch1 = currentMatch.match(new RegExp(ServicedDatePattern, 'i'));
@@ -321,16 +318,8 @@
                     serviceResults += 'Patient Invoice: ' + (patientInvoiceValue !== 'Not found' ? copyButton(patientInvoiceValue) : 'Not found') + '<br>';
                     
 
+                    serviceResults += 'Extension Tax: ' + (extensionTaxMatch ? copyButton(extensionTaxMatch[1]) : 'Not found') + '<br>';
 
-
-                    if (extensionTaxMatches) {
-                        
-                        extensionTaxMatches.forEach((taxValue, index) => {
-                        serviceResults += 'Extension Tax ' + (index + 1) + ': ' + copyButton(taxValue.match(/[\\d.]+/)[0]) + '<br>';
-                    });
-                    } else {
-                        serviceResults += 'Extension Tax: Not found<br>';
-                    }
 
                     if (ServicedDateMatch1) {
                         serviceResults += 'Serviced Date: ' + copyButton(ServicedDateMatch1[1]) + '<br>';
