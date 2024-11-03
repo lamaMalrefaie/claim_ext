@@ -296,10 +296,10 @@
                     var displayPattern = '"display":\\s*"([^"]+)"';
                     var NphiesPattern = '"coding":\\s*\\[\\s*{[\\s\\S]+?"system":\\s*"([^"]+)",\\s*"code":\\s*"([^"]+)"';
                     var ServicePattern = '"coding":\\s*\\[\\s*{[\\s\\S]+?},\\s*{[\\s\\S]+?"system":\\s*"([^"]+)",\\s*"code":\\s*"([^"]+)"';
-                    var extensionTaxPattern = '"url":\\s*"[^"]*extension-tax"[\\s\\S]*?"valueMoney":\\s*{\\s*"value":\\s*([\\d.]+)';
-                    var patientSharePattern = '"url":\\s*"[^"]*patient-share"[\\s\\S]*?"valueMoney":\\s*{\\s*"value":\\s*([\\d.]+)';
-                    var netPattern = '"net":\\s*{\\s*"value":\\s*([\\d.]+)'; // Pattern for net
-                    var unitPricePattern = '"unitPrice":\\s*{\\s*"value":\\s*([\\d.]+)'; // Pattern for unitPrice
+                    var extensionTaxPattern = '"url":\\s*"[^"]*extension-tax"[\\s\\S]*?"valueMoney":\\s*{\\s*"value":\\s*([\\d.]+)'; // Corrected pattern for extension-tax
+                    var patientSharePattern = '"url":\\s*"[^"]*patient-share"[\\s\\S]*?"valueMoney":\\s*{\\s*"value":\\s*([\\d.]+)'; // Corrected pattern for patient-share
+                    var netPattern = '"net":\\s*{\\s*"value":\\s*([\\d.]+)'; // Corrected pattern for net
+                    var unitPricePattern = '"unitPrice":\\s*{\\s*"value":\\s*([\\d.]+)'; // Corrected pattern for unitPrice
                     var quantityPattern = '"quantity":\\s*{\\s*"value":\\s*(\\d+)';
                     var servicedDatePattern = '"servicedDate":\\s*"([^"]+)"';
 
@@ -309,7 +309,7 @@
                     var extensionTaxMatch = currentMatch.match(new RegExp(extensionTaxPattern, 'i'));
                     var patientShareMatch = currentMatch.match(new RegExp(patientSharePattern, 'i'));
                     var netMatch = currentMatch.match(new RegExp(netPattern, 'i'));
-                    var unitPriceMatch = currentMatch.match(new RegExp(unitPricePattern, 'i')); // Extract unitPrice
+                    var unitPriceMatch = currentMatch.match(new RegExp(unitPricePattern, 'i'));
                     var quantityMatch = currentMatch.match(new RegExp(quantityPattern, 'i'));
                     var servicedDateMatch = currentMatch.match(new RegExp(servicedDatePattern, 'i'));
 
@@ -330,6 +330,7 @@
 
             document.getElementById('outputBox').innerHTML = previousResults + serviceResults;
         }
+
 
 
 
