@@ -283,14 +283,10 @@
 
         function processProductOrService(prettyJsonText, previousResults) {
             var servicePattern = '"productOrService":\\s*{[\\s\\S]+?},[\\s\\S]*?"quantity":\\s*{\\s*"value":\\s*(\\d+)';
-
-
-
-
             var serviceResults = '';
             var serviceMatches = prettyJsonText.match(new RegExp(servicePattern, 'gi'));
 
-            var patientInvoicePattern ='"system":\\s*"[^"]*patientInvoice"\\s*,\\s*"value":\\s*"([^"]+)"';
+            var patientInvoicePattern = '"system":\\s*"[^"]*patientInvoice"\\s*,\\s*"value":\\s*"([^"]+)"';
             var patientInvoiceMatch = prettyJsonText.match(new RegExp(patientInvoicePattern, 'i'));
             var patientInvoiceValue = patientInvoiceMatch ? patientInvoiceMatch[1] : 'Not found';
 
@@ -301,39 +297,31 @@
                     var NphiesPattern = '"coding":\\s*\\[\\s*{[\\s\\S]+?"system":\\s*"([^"]+)",\\s*"code":\\s*"([^"]+)"';
                     var ServicePattern = '"coding":\\s*\\[\\s*{[\\s\\S]+?},\\s*{[\\s\\S]+?"system":\\s*"([^"]+)",\\s*"code":\\s*"([^"]+)"';
                     var extensionTaxPattern = '"url":\\s*"[^"]*extension-tax"[\\s\\S]*?"valueMoney":\\s*{\\s*"value":\\s*([\\d.]+)';
+                    var quantityPattern = '"quantity":\\s*{\\s*"value":\\s*(\\d+)';
+                    var servicedDatePattern = '"servicedDate":\\s*"([^"]+)"';
 
                     var displayMatch = currentMatch.match(new RegExp(displayPattern, 'i'));
                     var NphiesMatch = currentMatch.match(new RegExp(NphiesPattern, 'i'));
                     var ServiceMatch = currentMatch.match(new RegExp(ServicePattern, 'i'));
-
                     var extensionTaxMatch = currentMatch.match(new RegExp(extensionTaxPattern, 'i'));
+                    var quantityMatch = currentMatch.match(new RegExp(quantityPattern, 'i'));
+                    var servicedDateMatch = currentMatch.match(new RegExp(servicedDatePattern, 'i'));
 
-                    var quantityMatch = currentMatch.match(new RegExp('"quantity":\\s*{\\s*"value":\\s*(\\d+)', 'i'));
-                    var ServicedDateMatch1 = currentMatch.match(new RegExp(ServicedDatePattern, 'i'));
-
-                    serviceResults +='<br>' +'Product/Service :' + (i + 1) + ' <br>';
+                    // Compile all extracted information into a single package for each service
+                    serviceResults += '<br>' + 'Product/Service :' + (i + 1) + ' <br>';
                     serviceResults += 'Name: ' + (displayMatch ? displayMatch[1] : 'Not found') + '<br>';
                     serviceResults += 'Nphies Code: ' + (NphiesMatch ? copyButton(NphiesMatch[2]) : 'Not found') + '<br>';
                     serviceResults += 'Service Code: ' + (ServiceMatch ? copyButton(ServiceMatch[2]) : 'Not found') + '<br>';
                     serviceResults += 'Patient Invoice: ' + (patientInvoiceValue !== 'Not found' ? copyButton(patientInvoiceValue) : 'Not found') + '<br>';
-                    
-
                     serviceResults += 'Extension Tax: ' + (extensionTaxMatch ? copyButton(extensionTaxMatch[1]) : 'Not found') + '<br>';
-
-
-                    if (ServicedDateMatch1) {
-                        serviceResults += 'Serviced Date: ' + copyButton(ServicedDateMatch1[1]) + '<br>';
-                    } else {
-                        serviceResults += 'Serviced Date: Not found<br>';
-                    }
-
-
+                    serviceResults += 'Serviced Date: ' + (servicedDateMatch ? copyButton(servicedDateMatch[1]) : 'Not found') + '<br>';
                     serviceResults += 'Quantity: ' + (quantityMatch ? quantityMatch[1] : 'Not found') + '<br><br>';
                 }
             }
 
             document.getElementById('outputBox').innerHTML = previousResults + serviceResults;
         }
+
 
         function copyButton(text) {
             return '<span style="cursor: pointer; text-decoration: underline;" onclick="copyToClipboard(\'' + text + '\')">' + text + '</span>';
